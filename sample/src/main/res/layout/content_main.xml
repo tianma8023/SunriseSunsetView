@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.github.tianma8023.ssvsample.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <com.github.tianma8023.ssv.SunriseSunsetView
+        android:id="@+id/ssv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"/>
+
+    <TextView
+        android:id="@+id/sr_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ssv"
+        android:layout_margin="10dp"
+        android:text="@string/sunrise_time"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/sunrise_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/sr_prompt_tv"
+        android:layout_below="@id/ssv"
+        android:layout_toEndOf="@id/sr_prompt_tv"
+        android:padding="10dp"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/ss_prompt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sr_prompt_tv"
+        android:layout_margin="10dp"
+        android:text="@string/sunset_time"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/sunset_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/ss_prompt_tv"
+        android:layout_below="@id/sr_prompt_tv"
+        android:layout_toEndOf="@id/ss_prompt_tv"
+        android:padding="10dp"
+        android:textSize="24sp"/>
+
+    <Button
+        android:id="@+id/update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ss_prompt_tv"
+        android:layout_margin="10dp"
+        android:text="@string/update"
+        android:textSize="18sp"/>
+
+</RelativeLayout>
