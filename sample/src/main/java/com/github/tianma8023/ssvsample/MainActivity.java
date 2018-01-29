@@ -2,8 +2,6 @@ package com.github.tianma8023.ssvsample;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -38,23 +36,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         mSunriseTextView = findViewById(R.id.sunrise_time_tv);
         mSunsetTextView = findViewById(R.id.sunset_time_tv);
         mUpdateButton = findViewById(R.id.update_btn);
 
         int sunriseHour = 6;
-        int sunriseMinute = 34;
+        int sunriseMinute = 17;
         int sunsetHour = 18;
-        int sunsetMinute = 10;
+        int sunsetMinute = 32;
 
         mSunriseSunsetView = findViewById(R.id.ssv);
         mSunriseSunsetView.setLabelConverter(new SunriseSunsetLabelFormatter() {
@@ -72,11 +61,17 @@ public class MainActivity extends AppCompatActivity {
                 return String.format(Locale.getDefault(), "%02dh %02dm", time.hour, time.minute);
             }
         });
+        // initial some custom attributions
+        // mSunriseSunsetView.setLabelTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        // mSunriseSunsetView.setLabelTextSize(30);
+        // mSunriseSunsetView.setTrackColor(ContextCompat.getColor(this, R.color.amber));
+        // mSunriseSunsetView.setSunColor(ContextCompat.getColor(this, R.color.teal));
+        // mSunriseSunsetView.setShadowColor(ContextCompat.getColor(this, R.color.indigo));
 
         refreshSSV(sunriseHour, sunriseMinute, sunsetHour, sunsetMinute);
 
-        mSunriseTextView.setText(sunriseHour + ":" + sunriseMinute);
-        mSunsetTextView.setText(sunsetHour + ":" + sunsetHour);
+        mSunriseTextView.setText(String.format("%02d:%02d", sunriseHour, sunriseMinute));
+        mSunsetTextView.setText(String.format("%02d:%02d", sunsetHour, sunsetMinute));
 
         mSunriseTextView.setOnClickListener(new ClickListener(mSunriseTextView));
         mSunsetTextView.setOnClickListener(new ClickListener(mSunsetTextView));

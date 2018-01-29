@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.github.tianma8023.ssvsample.MainActivity"
     tools:showIn="@layout/activity_main">
@@ -16,9 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:paddingTop="5dp"
+        app:ssv_label_text_color="@color/colorAccent"
+        app:ssv_label_text_size="16sp"
+        app:ssv_label_horizontal_gap="12dp"
+        app:ssv_label_vertical_gap="2dp"
+        app:ssv_shadow_color="@color/lightGreen"
+        app:ssv_sun_color="@color/amber"
+        app:ssv_sun_radius="10dp"
         app:ssv_track_color="@color/teal"
         app:ssv_track_width="1.5dp"/>
 

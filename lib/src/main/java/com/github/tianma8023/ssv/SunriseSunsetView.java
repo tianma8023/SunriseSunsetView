@@ -29,36 +29,46 @@ import java.util.Locale;
  */
 public class SunriseSunsetView extends View {
 
-    private static final int DEFAULT_SUN_RADIUS_PX = 20;
-    private static final int DEFAULT_LABEL_VERTICAL_GAP_PX = 10;
-    private static final int DEFAULT_LABEL_HORIZONTAL_GAP_PX = 20;
-
     private static final @ColorInt int DEFAULT_TRACK_COLOR = Color.WHITE;
-    private static final int DEFAULT_TRACK_WIDTH = 4;
+    private static final int DEFAULT_TRACK_WIDTH_PX = 4;
+
+    private static final @ColorInt int DEFAULT_SUN_COLOR = Color.YELLOW;
+    private static final int DEFAULT_SUN_RADIUS_PX = 20;
+    private static final int DEFAULT_SUN_STROKE_WIDTH_PX = 4;
+
+    private static final @ColorInt int DEFAULT_SHADOW_COLOR = Color.parseColor("#32FFFFFF");
+
+    private static final @ColorInt int DEFAULT_LABEL_TEXT_COLOR = Color.WHITE;
+    private static final int DEFAULT_LABEL_TEXT_SIZE = 40;
+    private static final int DEFAULT_LABEL_VERTICAL_GAP_PX = 5;
+    private static final int DEFAULT_LABEL_HORIZONTAL_GAP_PX = 20;
 
     /**
      * 当前日出日落比率, mRatio < 0: 未日出, mRatio > 1 已日落
      */
     private float mRatio;
-    /**
-     * 半圆的半径
-     */
-    private float mRadius;
-    /**
-     * 太阳的半径
-     */
-    private float mSunRadius = DEFAULT_SUN_RADIUS_PX;
 
     private Paint mTrackPaint;  // 绘制半圆轨迹的Paint
     private @ColorInt int mTrackColor = DEFAULT_TRACK_COLOR; // 轨迹的颜色
-    private @ColorInt int mTrackWidth = DEFAULT_TRACK_WIDTH;    // 轨迹的宽度
+    private int mTrackWidth = DEFAULT_TRACK_WIDTH_PX;    // 轨迹的宽度
     // 轨迹的PathEffect
     private PathEffect mTrackPathEffect = new DashPathEffect(new float[]{15, 15}, 1);
-
+    // 轨迹圆的半径
+    private float mTrackRadius;
 
     private Paint mShadowPaint; // 绘制日出日落阴影的Paint
+    private @ColorInt int mShadowColor = DEFAULT_SHADOW_COLOR; // 阴影颜色
+
     private Paint mSunPaint;    // 绘制太阳的Paint
-    private TextPaint mTextPaint;   // 绘制日出日落时间的Paint
+    private @ColorInt int mSunColor = DEFAULT_SUN_COLOR;  // 太阳颜色
+    private float mSunRadius = DEFAULT_SUN_RADIUS_PX; // 太阳半径
+    private Paint.Style mSunPaintStyle = Paint.Style.FILL; // 太阳Paint样式,默认FILL
+
+    private TextPaint mLabelPaint;   // 绘制日出日落时间的Paint
+    private int mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE;
+    private @ColorInt int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR;
+    private int mLabelVerticalGap = DEFAULT_LABEL_VERTICAL_GAP_PX;
+    private int mLabelHorizontalGap = DEFAULT_LABEL_HORIZONTAL_GAP_PX;
 
     /**
      * 日出时间
@@ -90,7 +100,17 @@ public class SunriseSunsetView extends View {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SunriseSunsetView, defStyleAttr, 0);
         if (a != null) {
             mTrackColor = a.getColor(R.styleable.SunriseSunsetView_ssv_track_color, DEFAULT_TRACK_COLOR);
-            mTrackWidth = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_track_width, DEFAULT_TRACK_WIDTH);
+            mTrackWidth = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_track_width, DEFAULT_TRACK_WIDTH_PX);
+
+            mSunColor = a.getColor(R.styleable.SunriseSunsetView_ssv_sun_color, DEFAULT_SUN_COLOR);
+            mSunRadius = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_sun_radius, DEFAULT_SUN_RADIUS_PX);
+
+            mShadowColor = a.getColor(R.styleable.SunriseSunsetView_ssv_shadow_color, DEFAULT_SHADOW_COLOR);
+
+            mLabelTextColor = a.getColor(R.styleable.SunriseSunsetView_ssv_label_text_color, DEFAULT_LABEL_TEXT_COLOR);
+            mLabelTextSize = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_label_text_size, DEFAULT_LABEL_TEXT_SIZE);
+            mLabelVerticalGap = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_vertical_gap, DEFAULT_LABEL_VERTICAL_GAP_PX);
+            mLabelHorizontalGap = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_horizontal_gap, DEFAULT_LABEL_HORIZONTAL_GAP_PX);
             a.recycle();
         }
         init();
@@ -103,9 +123,9 @@ public class SunriseSunsetView extends View {
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
-        mRadius = 1.0f * (measuredWidth - paddingLeft - paddingRight) / 2;
-        int expectedHeight = (int) (mRadius + paddingBottom + paddingTop);
-        mBoardRectF.set(paddingLeft, paddingTop, measuredWidth - paddingRight, expectedHeight - paddingBottom);
+        mTrackRadius = 1.0f * (measuredWidth - paddingLeft - paddingRight - 2 * mSunRadius) / 2;
+        int expectedHeight = (int) (mTrackRadius + mSunRadius + paddingBottom + paddingTop);
+        mBoardRectF.set(paddingLeft + mSunRadius, paddingTop + mSunRadius, measuredWidth - paddingRight - mSunRadius, expectedHeight - paddingBottom);
         setMeasuredDimension(measuredWidth, expectedHeight);
     }
 
@@ -117,18 +137,16 @@ public class SunriseSunsetView extends View {
 
         // 初始化日出日落阴影的画笔
         mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mShadowPaint.setColor(Color.parseColor("#32FFFFFF"));
         mShadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        prepareShadowPaint();
 
         // 初始化太阳的Paint
         mSunPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mSunPaint.setColor(Color.WHITE);
-        mSunPaint.setStyle(Paint.Style.STROKE);
-        mSunPaint.setStrokeWidth(4);
+        mSunPaint.setStrokeWidth(DEFAULT_SUN_STROKE_WIDTH_PX);
+        prepareSunPaint();
 
-        mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.WHITE);
-        mTextPaint.setTextSize(40);
+        mLabelPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        prepareLabelPaint();
     }
 
     // 半圆轨迹的画笔
@@ -137,6 +155,24 @@ public class SunriseSunsetView extends View {
         mTrackPaint.setStrokeWidth(mTrackWidth);
         mTrackPaint.setPathEffect(mTrackPathEffect);
     }
+
+    // 阴影画笔
+    private void prepareShadowPaint() {
+        mShadowPaint.setColor(mShadowColor);
+    }
+
+    // 太阳画笔
+    private void prepareSunPaint() {
+        mSunPaint.setColor(mSunColor);
+        mSunPaint.setStrokeWidth(DEFAULT_SUN_STROKE_WIDTH_PX);
+        mSunPaint.setStyle(mSunPaintStyle);
+    }
+
+    private void prepareLabelPaint() {
+        mLabelPaint.setColor(mLabelTextColor);
+        mLabelPaint.setTextSize(mLabelTextSize);
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -159,11 +195,13 @@ public class SunriseSunsetView extends View {
 
     // 绘制日出日落阴影部分
     private void drawShadow(Canvas canvas) {
+        prepareShadowPaint();
+
         canvas.save();
         Path path = new Path();
         float endY = mBoardRectF.bottom;
         RectF rectF = new RectF(mBoardRectF.left, mBoardRectF.top, mBoardRectF.right, mBoardRectF.bottom + mBoardRectF.height());
-        float curPointX = mBoardRectF.left + mRadius - mRadius * (float) Math.cos(Math.PI * mRatio);
+        float curPointX = mBoardRectF.left + mTrackRadius - mTrackRadius * (float) Math.cos(Math.PI * mRatio);
 
         path.moveTo(0, endY);
         path.arcTo(rectF, 180, 180 * mRatio);
@@ -175,10 +213,11 @@ public class SunriseSunsetView extends View {
 
     // 绘制太阳
     private void drawSun(Canvas canvas) {
+        prepareSunPaint();
         canvas.save();
 
-        float curPointX = mBoardRectF.left + mRadius - mRadius * (float) Math.cos(Math.PI * mRatio);
-        float curPointY = mBoardRectF.bottom - mRadius * (float) Math.sin(Math.PI * mRatio);
+        float curPointX = mBoardRectF.left + mTrackRadius - mTrackRadius * (float) Math.cos(Math.PI * mRatio);
+        float curPointY = mBoardRectF.bottom - mTrackRadius * (float) Math.sin(Math.PI * mRatio);
         canvas.drawCircle(curPointX, curPointY, mSunRadius, mSunPaint);
 
         canvas.restore();
@@ -189,20 +228,23 @@ public class SunriseSunsetView extends View {
         if (mSunriseTime == null || mSunsetTime == null) {
             return;
         }
+        prepareLabelPaint();
+
         canvas.save();
         // 绘制日出时间
         String sunriseStr = mLabelConverter.formatSunriseLabel(mSunriseTime);
 
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
-        Paint.FontMetricsInt metricsInt = mTextPaint.getFontMetricsInt();
-        float baseLineX = mBoardRectF.left + DEFAULT_LABEL_HORIZONTAL_GAP_PX;
-        float baseLineY = mBoardRectF.bottom - metricsInt.bottom - DEFAULT_LABEL_VERTICAL_GAP_PX;
-        canvas.drawText(sunriseStr, baseLineX, baseLineY, mTextPaint);
+        mLabelPaint.setTextAlign(Paint.Align.LEFT);
+        Paint.FontMetricsInt metricsInt = mLabelPaint.getFontMetricsInt();
+        float baseLineX = mBoardRectF.left + mSunRadius + mLabelHorizontalGap;
+        float baseLineY = mBoardRectF.bottom - metricsInt.bottom - mLabelVerticalGap;
+        canvas.drawText(sunriseStr, baseLineX, baseLineY, mLabelPaint);
 
-        mTextPaint.setTextAlign(Paint.Align.RIGHT);
+        // 绘制日落时间
+        mLabelPaint.setTextAlign(Paint.Align.RIGHT);
         String sunsetStr = mLabelConverter.formatSunsetLabel(mSunsetTime);
-        baseLineX = mBoardRectF.right - DEFAULT_LABEL_HORIZONTAL_GAP_PX;
-        canvas.drawText(sunsetStr, baseLineX, baseLineY, mTextPaint);
+        baseLineX = mBoardRectF.right - mSunRadius - mLabelHorizontalGap;
+        canvas.drawText(sunsetStr, baseLineX, baseLineY, mLabelPaint);
         canvas.restore();
     }
 
@@ -231,10 +273,6 @@ public class SunriseSunsetView extends View {
         return mSunRadius;
     }
 
-    public void setSunRadius(float sunRadius) {
-        mSunRadius = sunRadius;
-    }
-
     public SunriseSunsetLabelFormatter getLabelConverter() {
         return mLabelConverter;
     }
@@ -253,6 +291,38 @@ public class SunriseSunsetView extends View {
 
     public void setTrackPathEffect(PathEffect trackPathEffect) {
         mTrackPathEffect = trackPathEffect;
+    }
+
+    public void setSunColor(@ColorInt int sunColor) {
+        mSunColor = sunColor;
+    }
+
+    public void setSunRadius(float sunRadius) {
+        mSunRadius = sunRadius;
+    }
+
+    public void setSunPaintStyle(Paint.Style sunPaintStyle) {
+        mSunPaintStyle = sunPaintStyle;
+    }
+
+    public void setShadowColor(@ColorInt int shadowColor) {
+        mShadowColor = shadowColor;
+    }
+
+    public void setLabelTextSize(int labelTextSize) {
+        mLabelTextSize = labelTextSize;
+    }
+
+    public void setLabelTextColor(@ColorInt int labelTextColor) {
+        mLabelTextColor = labelTextColor;
+    }
+
+    public void setLabelVerticalGap(int labelVerticalGap) {
+        mLabelVerticalGap = labelVerticalGap;
+    }
+
+    public void setLabelHorizontalGap(int labelHorizontalGap) {
+        mLabelHorizontalGap = labelHorizontalGap;
     }
 
     public void startAnimate() {

@@ -2,6 +2,6 @@
     <string name="app_name">SunriseSunsetView</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="sunrise_time">Set sunrise time:</string>
-    <string name="sunset_time">Set sunset time:</string>
+    <string name="sunset_time">Set sunset time :</string>
     <string name="update">Update</string>
 </resources>
