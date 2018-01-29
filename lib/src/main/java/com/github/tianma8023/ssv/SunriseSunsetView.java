@@ -2,6 +2,7 @@ package com.github.tianma8023.ssv;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -31,6 +33,9 @@ public class SunriseSunsetView extends View {
     private static final int DEFAULT_LABEL_VERTICAL_GAP_PX = 10;
     private static final int DEFAULT_LABEL_HORIZONTAL_GAP_PX = 20;
 
+    private static final @ColorInt int DEFAULT_TRACK_COLOR = Color.WHITE;
+    private static final int DEFAULT_TRACK_WIDTH = 4;
+
     /**
      * 当前日出日落比率, mRatio < 0: 未日出, mRatio > 1 已日落
      */
@@ -44,7 +49,13 @@ public class SunriseSunsetView extends View {
      */
     private float mSunRadius = DEFAULT_SUN_RADIUS_PX;
 
-    private Paint mCirclePaint; // 绘制圆的Paint
+    private Paint mTrackPaint;  // 绘制半圆轨迹的Paint
+    private @ColorInt int mTrackColor = DEFAULT_TRACK_COLOR; // 轨迹的颜色
+    private @ColorInt int mTrackWidth = DEFAULT_TRACK_WIDTH;    // 轨迹的宽度
+    // 轨迹的PathEffect
+    private PathEffect mTrackPathEffect = new DashPathEffect(new float[]{15, 15}, 1);
+
+
     private Paint mShadowPaint; // 绘制日出日落阴影的Paint
     private Paint mSunPaint;    // 绘制太阳的Paint
     private TextPaint mTextPaint;   // 绘制日出日落时间的Paint
@@ -71,12 +82,17 @@ public class SunriseSunsetView extends View {
     }
 
     public SunriseSunsetView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public SunriseSunsetView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SunriseSunsetView, defStyleAttr, 0);
+        if (a != null) {
+            mTrackColor = a.getColor(R.styleable.SunriseSunsetView_ssv_track_color, DEFAULT_TRACK_COLOR);
+            mTrackWidth = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_track_width, DEFAULT_TRACK_WIDTH);
+            a.recycle();
+        }
         init();
     }
 
@@ -94,13 +110,10 @@ public class SunriseSunsetView extends View {
     }
 
     private void init() {
-        // 初始化半圆的画笔
-        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCirclePaint.setColor(Color.WHITE); // 圆周的颜色为白色
-        mCirclePaint.setStyle(Paint.Style.STROKE); // 画笔的样式为线条
-        mCirclePaint.setStrokeWidth(4); // 边框宽度
-        PathEffect effect = new DashPathEffect(new float[]{15, 15}, 1); // 虚线
-        mCirclePaint.setPathEffect(effect);
+        // 初始化半圆轨迹的画笔
+        mTrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTrackPaint.setStyle(Paint.Style.STROKE); // 画笔的样式为线条
+        prepareTrackPaint();
 
         // 初始化日出日落阴影的画笔
         mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -118,6 +131,13 @@ public class SunriseSunsetView extends View {
         mTextPaint.setTextSize(40);
     }
 
+    // 半圆轨迹的画笔
+    private void prepareTrackPaint() {
+        mTrackPaint.setColor(mTrackColor);
+        mTrackPaint.setStrokeWidth(mTrackWidth);
+        mTrackPaint.setPathEffect(mTrackPathEffect);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -130,9 +150,10 @@ public class SunriseSunsetView extends View {
 
     // 绘制太阳轨道（半圆）
     private void drawSunTrack(Canvas canvas) {
+        prepareTrackPaint();
         canvas.save();
         RectF rectF = new RectF(mBoardRectF.left, mBoardRectF.top, mBoardRectF.right, mBoardRectF.bottom + mBoardRectF.height());
-        canvas.drawArc(rectF, 180, 180, false, mCirclePaint);
+        canvas.drawArc(rectF, 180, 180, false, mTrackPaint);
         canvas.restore();
     }
 
@@ -220,6 +241,18 @@ public class SunriseSunsetView extends View {
 
     public void setLabelConverter(SunriseSunsetLabelFormatter labelConverter) {
         mLabelConverter = labelConverter;
+    }
+
+    public void setTrackColor(@ColorInt int trackColor) {
+        mTrackColor = trackColor;
+    }
+
+    public void setTrackWidth(int trackWidthInPx) {
+        mTrackWidth = trackWidthInPx;
+    }
+
+    public void setTrackPathEffect(PathEffect trackPathEffect) {
+        mTrackPathEffect = trackPathEffect;
     }
 
     public void startAnimate() {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SunriseSunsetView">
+        <attr name="ssv_sun_radius" format="dimension"/>
+        <attr name="ssv_sun_color" format="color|reference"/>
+        <attr name="ssv_track_color" format="color|reference"/>
+        <attr name="ssv_track_width" format="dimension"/>
+    </declare-styleable>
+</resources>

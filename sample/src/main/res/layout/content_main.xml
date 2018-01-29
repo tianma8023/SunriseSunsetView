@@ -18,7 +18,9 @@
         android:layout_margin="10dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp"
+        app:ssv_track_color="@color/teal"
+        app:ssv_track_width="1.5dp"/>
 
     <TextView
         android:id="@+id/sr_prompt_tv"
