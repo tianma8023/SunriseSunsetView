@@ -65,10 +65,10 @@ public class SunriseSunsetView extends View {
     private Paint.Style mSunPaintStyle = Paint.Style.FILL; // 太阳Paint样式,默认FILL
 
     private TextPaint mLabelPaint;   // 绘制日出日落时间的Paint
-    private int mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE;
-    private @ColorInt int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR;
-    private int mLabelVerticalGap = DEFAULT_LABEL_VERTICAL_GAP_PX;
-    private int mLabelHorizontalGap = DEFAULT_LABEL_HORIZONTAL_GAP_PX;
+    private int mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE; // 标签文字大小
+    private @ColorInt int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR; // 标签颜色
+    private int mLabelVerticalGap = DEFAULT_LABEL_VERTICAL_GAP_PX; // 竖直方向间距
+    private int mLabelHorizontalGap = DEFAULT_LABEL_HORIZONTAL_GAP_PX; // 水平方向间距
 
     /**
      * 日出时间
@@ -84,6 +84,7 @@ public class SunriseSunsetView extends View {
      */
     private RectF mBoardRectF = new RectF();
 
+    // Label Formatter - Default is a Simple label formatter.
     private SunriseSunsetLabelFormatter mLabelConverter = new SimpleSunriseSunsetLabelFormatter();
 
     public SunriseSunsetView(Context context) {
@@ -102,10 +103,10 @@ public class SunriseSunsetView extends View {
             mTrackColor = a.getColor(R.styleable.SunriseSunsetView_ssv_track_color, DEFAULT_TRACK_COLOR);
             mTrackWidth = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_track_width, DEFAULT_TRACK_WIDTH_PX);
 
+            mShadowColor = a.getColor(R.styleable.SunriseSunsetView_ssv_shadow_color, DEFAULT_SHADOW_COLOR);
+
             mSunColor = a.getColor(R.styleable.SunriseSunsetView_ssv_sun_color, DEFAULT_SUN_COLOR);
             mSunRadius = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_sun_radius, DEFAULT_SUN_RADIUS_PX);
-
-            mShadowColor = a.getColor(R.styleable.SunriseSunsetView_ssv_shadow_color, DEFAULT_SHADOW_COLOR);
 
             mLabelTextColor = a.getColor(R.styleable.SunriseSunsetView_ssv_label_text_color, DEFAULT_LABEL_TEXT_COLOR);
             mLabelTextSize = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_label_text_size, DEFAULT_LABEL_TEXT_SIZE);
@@ -156,18 +157,19 @@ public class SunriseSunsetView extends View {
         mTrackPaint.setPathEffect(mTrackPathEffect);
     }
 
-    // 阴影画笔
+    // 阴影的画笔
     private void prepareShadowPaint() {
         mShadowPaint.setColor(mShadowColor);
     }
 
-    // 太阳画笔
+    // 太阳的画笔
     private void prepareSunPaint() {
         mSunPaint.setColor(mSunColor);
         mSunPaint.setStrokeWidth(DEFAULT_SUN_STROKE_WIDTH_PX);
         mSunPaint.setStyle(mSunPaintStyle);
     }
 
+    // 标签的画笔
     private void prepareLabelPaint() {
         mLabelPaint.setColor(mLabelTextColor);
         mLabelPaint.setTextSize(mLabelTextSize);
