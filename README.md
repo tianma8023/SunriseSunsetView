@@ -7,6 +7,25 @@ An Android view to show sunrise and sunset dynamically which is common seen in W
 ![SunriseSunsetView Sample](/ss/ssv_ss.gif)
 
 ## Import
+1. To use this lib you need add `jitpack.io` repository to your **root** `build.gradle`:
+    ```groovy
+    allprojects {
+        repositories {
+            jcenter()
+            maven { url 'https://jitpack.io' } // add this line
+        }
+    }
+    ```
+    Note: don't add the jitpack.io repository under buildscript closure.
+
+2. Add SunriseSunsetView dependency in your **module** `build.gradle`:
+    ```groovy
+    // ...
+    // if Android Gradle Plugin after v3.0
+    implementation 'com.github.tianma8023:SunriseSunsetView:0.0.1' 
+    // if Android Gradle Plugin before v3.0
+    // compile 'com.github.tianma8023:SunriseSunsetView:0.0.1' 
+    ```
 
 ## Usage
 1. SunriseSunsetView can be placed in layout xml file:
@@ -90,4 +109,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
+``` 
