@@ -22,9 +22,9 @@ An Android view to show sunrise and sunset dynamically which is common seen in W
     ```groovy
     // ...
     // if Android Gradle Plugin after v3.0
-    implementation 'com.github.tianma8023:SunriseSunsetView:0.0.1' 
+    implementation 'com.github.tianma8023:SunriseSunsetView:0.0.2' 
     // if Android Gradle Plugin before v3.0
-    // compile 'com.github.tianma8023:SunriseSunsetView:0.0.1' 
+    // compile 'com.github.tianma8023:SunriseSunsetView:0.0.2' 
     ```
 
 ## Usage
