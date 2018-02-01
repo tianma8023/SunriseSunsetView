@@ -40,8 +40,8 @@ public class SunriseSunsetView extends View {
 
     private static final @ColorInt int DEFAULT_LABEL_TEXT_COLOR = Color.WHITE;
     private static final int DEFAULT_LABEL_TEXT_SIZE = 40;
-    private static final int DEFAULT_LABEL_VERTICAL_GAP_PX = 5;
-    private static final int DEFAULT_LABEL_HORIZONTAL_GAP_PX = 20;
+    private static final int DEFAULT_LABEL_VERTICAL_OFFSET_PX = 5;
+    private static final int DEFAULT_LABEL_HORIZONTAL_OFFSET_PX = 20;
 
     /**
      * 当前日出日落比率, mRatio < 0: 未日出, mRatio > 1 已日落
@@ -67,8 +67,8 @@ public class SunriseSunsetView extends View {
     private TextPaint mLabelPaint;   // 绘制日出日落时间的Paint
     private int mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE; // 标签文字大小
     private @ColorInt int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR; // 标签颜色
-    private int mLabelVerticalGap = DEFAULT_LABEL_VERTICAL_GAP_PX; // 竖直方向间距
-    private int mLabelHorizontalGap = DEFAULT_LABEL_HORIZONTAL_GAP_PX; // 水平方向间距
+    private int mLabelVerticalOffset = DEFAULT_LABEL_VERTICAL_OFFSET_PX; // 竖直方向间距
+    private int mLabelHorizontalOffset = DEFAULT_LABEL_HORIZONTAL_OFFSET_PX; // 水平方向间距
 
     /**
      * 日出时间
@@ -85,7 +85,7 @@ public class SunriseSunsetView extends View {
     private RectF mBoardRectF = new RectF();
 
     // Label Formatter - Default is a Simple label formatter.
-    private SunriseSunsetLabelFormatter mLabelConverter = new SimpleSunriseSunsetLabelFormatter();
+    private SunriseSunsetLabelFormatter mLabelFormatter = new SimpleSunriseSunsetLabelFormatter();
 
     public SunriseSunsetView(Context context) {
         super(context);
@@ -110,8 +110,8 @@ public class SunriseSunsetView extends View {
 
             mLabelTextColor = a.getColor(R.styleable.SunriseSunsetView_ssv_label_text_color, DEFAULT_LABEL_TEXT_COLOR);
             mLabelTextSize = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_label_text_size, DEFAULT_LABEL_TEXT_SIZE);
-            mLabelVerticalGap = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_vertical_gap, DEFAULT_LABEL_VERTICAL_GAP_PX);
-            mLabelHorizontalGap = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_horizontal_gap, DEFAULT_LABEL_HORIZONTAL_GAP_PX);
+            mLabelVerticalOffset = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_vertical_offset, DEFAULT_LABEL_VERTICAL_OFFSET_PX);
+            mLabelHorizontalOffset = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_horizontal_offset, DEFAULT_LABEL_HORIZONTAL_OFFSET_PX);
             a.recycle();
         }
         init();
@@ -234,18 +234,18 @@ public class SunriseSunsetView extends View {
 
         canvas.save();
         // 绘制日出时间
-        String sunriseStr = mLabelConverter.formatSunriseLabel(mSunriseTime);
+        String sunriseStr = mLabelFormatter.formatSunriseLabel(mSunriseTime);
 
         mLabelPaint.setTextAlign(Paint.Align.LEFT);
         Paint.FontMetricsInt metricsInt = mLabelPaint.getFontMetricsInt();
-        float baseLineX = mBoardRectF.left + mSunRadius + mLabelHorizontalGap;
-        float baseLineY = mBoardRectF.bottom - metricsInt.bottom - mLabelVerticalGap;
+        float baseLineX = mBoardRectF.left + mSunRadius + mLabelHorizontalOffset;
+        float baseLineY = mBoardRectF.bottom - metricsInt.bottom - mLabelVerticalOffset;
         canvas.drawText(sunriseStr, baseLineX, baseLineY, mLabelPaint);
 
         // 绘制日落时间
         mLabelPaint.setTextAlign(Paint.Align.RIGHT);
-        String sunsetStr = mLabelConverter.formatSunsetLabel(mSunsetTime);
-        baseLineX = mBoardRectF.right - mSunRadius - mLabelHorizontalGap;
+        String sunsetStr = mLabelFormatter.formatSunsetLabel(mSunsetTime);
+        baseLineX = mBoardRectF.right - mSunRadius - mLabelHorizontalOffset;
         canvas.drawText(sunsetStr, baseLineX, baseLineY, mLabelPaint);
         canvas.restore();
     }
@@ -275,12 +275,12 @@ public class SunriseSunsetView extends View {
         return mSunRadius;
     }
 
-    public SunriseSunsetLabelFormatter getLabelConverter() {
-        return mLabelConverter;
+    public SunriseSunsetLabelFormatter getLabelFormatter() {
+        return mLabelFormatter;
     }
 
-    public void setLabelConverter(SunriseSunsetLabelFormatter labelConverter) {
-        mLabelConverter = labelConverter;
+    public void setLabelFormatter(SunriseSunsetLabelFormatter labelFormatter) {
+        mLabelFormatter = labelFormatter;
     }
 
     public void setTrackColor(@ColorInt int trackColor) {
@@ -319,12 +319,12 @@ public class SunriseSunsetView extends View {
         mLabelTextColor = labelTextColor;
     }
 
-    public void setLabelVerticalGap(int labelVerticalGap) {
-        mLabelVerticalGap = labelVerticalGap;
+    public void setLabelVerticalOffset(int labelVerticalOffset) {
+        mLabelVerticalOffset = labelVerticalOffset;
     }
 
-    public void setLabelHorizontalGap(int labelHorizontalGap) {
-        mLabelHorizontalGap = labelHorizontalGap;
+    public void setLabelHorizontalOffset(int labelHorizontalOffset) {
+        mLabelHorizontalOffset = labelHorizontalOffset;
     }
 
     public void startAnimate() {

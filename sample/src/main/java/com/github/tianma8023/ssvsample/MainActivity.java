@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         int sunsetMinute = 32;
 
         mSunriseSunsetView = findViewById(R.id.ssv);
-        mSunriseSunsetView.setLabelConverter(new SunriseSunsetLabelFormatter() {
+        mSunriseSunsetView.setLabelFormatter(new SunriseSunsetLabelFormatter() {
             @Override
             public String formatSunriseLabel(@NonNull Time sunrise) {
                 return formatLabel(sunrise);
