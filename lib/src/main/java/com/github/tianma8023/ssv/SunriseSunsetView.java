@@ -70,6 +70,8 @@ public class SunriseSunsetView extends View {
     private int mLabelVerticalOffset = DEFAULT_LABEL_VERTICAL_OFFSET_PX; // 竖直方向间距
     private int mLabelHorizontalOffset = DEFAULT_LABEL_HORIZONTAL_OFFSET_PX; // 水平方向间距
 
+    private static final int MINIMAL_TRACK_RADIUS_PX = 300; // 半圆轨迹最小半径
+
     /**
      * 日出时间
      */
@@ -119,15 +121,23 @@ public class SunriseSunsetView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         int paddingRight = getPaddingRight();
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
-        mTrackRadius = 1.0f * (measuredWidth - paddingLeft - paddingRight - 2 * mSunRadius) / 2;
+
+        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+
+        // 处理wrap_content这种情况
+        if (widthSpecMode == MeasureSpec.AT_MOST) {
+            widthSpecSize = paddingLeft + paddingRight + MINIMAL_TRACK_RADIUS_PX * 2 + (int) mSunRadius * 2;
+        }
+
+        mTrackRadius = 1.0f * (widthSpecSize - paddingLeft - paddingRight - 2 * mSunRadius) / 2;
         int expectedHeight = (int) (mTrackRadius + mSunRadius + paddingBottom + paddingTop);
-        mBoardRectF.set(paddingLeft + mSunRadius, paddingTop + mSunRadius, measuredWidth - paddingRight - mSunRadius, expectedHeight - paddingBottom);
-        setMeasuredDimension(measuredWidth, expectedHeight);
+        mBoardRectF.set(paddingLeft + mSunRadius, paddingTop + mSunRadius, widthSpecSize - paddingRight - mSunRadius, expectedHeight - paddingBottom);
+        setMeasuredDimension(widthSpecSize, expectedHeight);
     }
 
     private void init() {
