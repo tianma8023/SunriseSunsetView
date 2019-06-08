@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private SunriseSunsetView mSunriseSunsetView;
     private TextView mSunriseTextView;
     private TextView mSunsetTextView;
-    private Button mUpdateButton;
 
     private TimePickerDialog mTimePicker;
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         mSunriseTextView = findViewById(R.id.sunrise_time_tv);
         mSunsetTextView = findViewById(R.id.sunset_time_tv);
-        mUpdateButton = findViewById(R.id.update_btn);
+        Button updateButton = findViewById(R.id.update_btn);
 
         int sunriseHour = 6;
         int sunriseMinute = 17;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mSunriseTextView.setOnClickListener(new ClickListener(mSunriseTextView));
         mSunsetTextView.setOnClickListener(new ClickListener(mSunsetTextView));
 
-        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+        updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] srArr = mSunriseTextView.getText().toString().split(":");

@@ -10,8 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
-import android.support.annotation.ColorInt;
-import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -29,16 +27,16 @@ import java.util.Locale;
  */
 public class SunriseSunsetView extends View {
 
-    private static final @ColorInt int DEFAULT_TRACK_COLOR = Color.WHITE;
+    private static final int DEFAULT_TRACK_COLOR = Color.WHITE;
     private static final int DEFAULT_TRACK_WIDTH_PX = 4;
 
-    private static final @ColorInt int DEFAULT_SUN_COLOR = Color.YELLOW;
+    private static final int DEFAULT_SUN_COLOR = Color.YELLOW;
     private static final int DEFAULT_SUN_RADIUS_PX = 20;
     private static final int DEFAULT_SUN_STROKE_WIDTH_PX = 4;
 
-    private static final @ColorInt int DEFAULT_SHADOW_COLOR = Color.parseColor("#32FFFFFF");
+    private static final int DEFAULT_SHADOW_COLOR = Color.parseColor("#32FFFFFF");
 
-    private static final @ColorInt int DEFAULT_LABEL_TEXT_COLOR = Color.WHITE;
+    private static final int DEFAULT_LABEL_TEXT_COLOR = Color.WHITE;
     private static final int DEFAULT_LABEL_TEXT_SIZE = 40;
     private static final int DEFAULT_LABEL_VERTICAL_OFFSET_PX = 5;
     private static final int DEFAULT_LABEL_HORIZONTAL_OFFSET_PX = 20;
@@ -49,7 +47,7 @@ public class SunriseSunsetView extends View {
     private float mRatio;
 
     private Paint mTrackPaint;  // 绘制半圆轨迹的Paint
-    private @ColorInt int mTrackColor = DEFAULT_TRACK_COLOR; // 轨迹的颜色
+    private int mTrackColor = DEFAULT_TRACK_COLOR; // 轨迹的颜色
     private int mTrackWidth = DEFAULT_TRACK_WIDTH_PX;    // 轨迹的宽度
     // 轨迹的PathEffect
     private PathEffect mTrackPathEffect = new DashPathEffect(new float[]{15, 15}, 1);
@@ -57,16 +55,16 @@ public class SunriseSunsetView extends View {
     private float mTrackRadius;
 
     private Paint mShadowPaint; // 绘制日出日落阴影的Paint
-    private @ColorInt int mShadowColor = DEFAULT_SHADOW_COLOR; // 阴影颜色
+    private int mShadowColor = DEFAULT_SHADOW_COLOR; // 阴影颜色
 
     private Paint mSunPaint;    // 绘制太阳的Paint
-    private @ColorInt int mSunColor = DEFAULT_SUN_COLOR;  // 太阳颜色
+    private int mSunColor = DEFAULT_SUN_COLOR;  // 太阳颜色
     private float mSunRadius = DEFAULT_SUN_RADIUS_PX; // 太阳半径
     private Paint.Style mSunPaintStyle = Paint.Style.FILL; // 太阳Paint样式,默认FILL
 
     private TextPaint mLabelPaint;   // 绘制日出日落时间的Paint
     private int mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE; // 标签文字大小
-    private @ColorInt int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR; // 标签颜色
+    private int mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR; // 标签颜色
     private int mLabelVerticalOffset = DEFAULT_LABEL_VERTICAL_OFFSET_PX; // 竖直方向间距
     private int mLabelHorizontalOffset = DEFAULT_LABEL_HORIZONTAL_OFFSET_PX; // 水平方向间距
 
@@ -94,11 +92,11 @@ public class SunriseSunsetView extends View {
         init();
     }
 
-    public SunriseSunsetView(Context context, @Nullable AttributeSet attrs) {
+    public SunriseSunsetView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SunriseSunsetView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SunriseSunsetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SunriseSunsetView, defStyleAttr, 0);
         if (a != null) {
@@ -293,7 +291,7 @@ public class SunriseSunsetView extends View {
         mLabelFormatter = labelFormatter;
     }
 
-    public void setTrackColor(@ColorInt int trackColor) {
+    public void setTrackColor(int trackColor) {
         mTrackColor = trackColor;
     }
 
@@ -305,7 +303,7 @@ public class SunriseSunsetView extends View {
         mTrackPathEffect = trackPathEffect;
     }
 
-    public void setSunColor(@ColorInt int sunColor) {
+    public void setSunColor(int sunColor) {
         mSunColor = sunColor;
     }
 
@@ -317,7 +315,7 @@ public class SunriseSunsetView extends View {
         mSunPaintStyle = sunPaintStyle;
     }
 
-    public void setShadowColor(@ColorInt int shadowColor) {
+    public void setShadowColor(int shadowColor) {
         mShadowColor = shadowColor;
     }
 
@@ -325,7 +323,7 @@ public class SunriseSunsetView extends View {
         mLabelTextSize = labelTextSize;
     }
 
-    public void setLabelTextColor(@ColorInt int labelTextColor) {
+    public void setLabelTextColor(int labelTextColor) {
         mLabelTextColor = labelTextColor;
     }
 

@@ -1,7 +1,5 @@
 package com.github.tianma8023.formatter;
 
-import android.support.annotation.NonNull;
-
 import com.github.tianma8023.model.Time;
 
 import java.util.Locale;
@@ -11,12 +9,12 @@ import java.util.Locale;
  */
 public class SimpleSunriseSunsetLabelFormatter implements SunriseSunsetLabelFormatter {
     @Override
-    public String formatSunriseLabel(@NonNull Time sunrise) {
+    public String formatSunriseLabel(Time sunrise) {
         return formatTime(sunrise);
     }
 
     @Override
-    public String formatSunsetLabel(@NonNull Time sunset) {
+    public String formatSunsetLabel(Time sunset) {
         return formatTime(sunset);
     }
 

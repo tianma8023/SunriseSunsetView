@@ -1,7 +1,5 @@
 package com.github.tianma8023.formatter;
 
-import android.support.annotation.NonNull;
-
 import com.github.tianma8023.model.Time;
 
 
@@ -10,7 +8,7 @@ import com.github.tianma8023.model.Time;
  */
 public interface SunriseSunsetLabelFormatter {
 
-    String formatSunriseLabel(@NonNull Time sunrise);
+    String formatSunriseLabel(Time sunrise);
 
-    String formatSunsetLabel(@NonNull Time sunset);
+    String formatSunsetLabel(Time sunset);
 }
