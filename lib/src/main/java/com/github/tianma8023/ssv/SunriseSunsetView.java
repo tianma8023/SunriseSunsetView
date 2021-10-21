@@ -2,7 +2,6 @@ package com.github.tianma8023.ssv;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -98,21 +97,18 @@ public class SunriseSunsetView extends View {
 
     public SunriseSunsetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SunriseSunsetView, defStyleAttr, 0);
-        if (a != null) {
-            mTrackColor = a.getColor(R.styleable.SunriseSunsetView_ssv_track_color, DEFAULT_TRACK_COLOR);
-            mTrackWidth = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_track_width, DEFAULT_TRACK_WIDTH_PX);
+            mTrackColor = DEFAULT_TRACK_COLOR;
+            mTrackWidth = DEFAULT_TRACK_WIDTH_PX;
 
-            mShadowColor = a.getColor(R.styleable.SunriseSunsetView_ssv_shadow_color, DEFAULT_SHADOW_COLOR);
+            mShadowColor = DEFAULT_SHADOW_COLOR;
 
-            mSunColor = a.getColor(R.styleable.SunriseSunsetView_ssv_sun_color, DEFAULT_SUN_COLOR);
-            mSunRadius = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_sun_radius, DEFAULT_SUN_RADIUS_PX);
+            mSunColor = DEFAULT_SUN_COLOR;
+            mSunRadius = DEFAULT_SUN_RADIUS_PX;
 
-            mLabelTextColor = a.getColor(R.styleable.SunriseSunsetView_ssv_label_text_color, DEFAULT_LABEL_TEXT_COLOR);
-            mLabelTextSize = a.getDimensionPixelSize(R.styleable.SunriseSunsetView_ssv_label_text_size, DEFAULT_LABEL_TEXT_SIZE);
-            mLabelVerticalOffset = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_vertical_offset, DEFAULT_LABEL_VERTICAL_OFFSET_PX);
-            mLabelHorizontalOffset = a.getDimensionPixelOffset(R.styleable.SunriseSunsetView_ssv_label_horizontal_offset, DEFAULT_LABEL_HORIZONTAL_OFFSET_PX);
-            a.recycle();
+            mLabelTextColor = DEFAULT_LABEL_TEXT_COLOR;
+            mLabelTextSize = DEFAULT_LABEL_TEXT_SIZE;
+            mLabelVerticalOffset = DEFAULT_LABEL_VERTICAL_OFFSET_PX;
+            mLabelHorizontalOffset = DEFAULT_LABEL_HORIZONTAL_OFFSET_PX;
         }
         init();
     }
